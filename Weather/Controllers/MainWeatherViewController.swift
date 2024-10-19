@@ -26,6 +26,9 @@ class MainWeatherViewController: UIViewController {
         super.viewDidLoad()
         view.addSubview(tableView)
         
+        let headerView = HomeHeaderView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 300))
+        tableView.tableHeaderView = headerView
+        
         tableView.delegate = self
         tableView.dataSource = self
     }
