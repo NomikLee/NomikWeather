@@ -8,11 +8,19 @@
 import UIKit
 
 class SettingViewController: UIViewController {
-
+    
+    // MARK: - Variables
+    // MARK: - UI Components
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .systemMint
     }
+    
+    // MARK: - Functions
+    // MARK: - Selectors
+    // MARK: - UI Setup
+    // MARK: - Extension
 
 }

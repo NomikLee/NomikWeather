@@ -10,35 +10,37 @@ import Combine
 
 class MainWeatherViewController: UIViewController {
     
+    // MARK: - Variables
     private var viewModel = WeatherDataViewModels()
     var cancellables: Set<AnyCancellable> = []
     
+    // MARK: - UI Components
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(MainWeatherTableViewCell.self , forCellReuseIdentifier: MainWeatherTableViewCell.identifier)
         return tableView
     }()
-
+    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(tableView)
         
         tableView.delegate = self
         tableView.dataSource = self
-        
-        viewModel.fetchWeatherData()
-        viewModel.$weatherData.sink { [weak self] Result in
-            print(Result?.hourly.weatherCode)
-        }
-        .store(in: &cancellables)
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
     }
+    
+    // MARK: - Functions
+    // MARK: - Selectors
+    // MARK: - UI Setup
 }
 
+// MARK: - Extension
 extension MainWeatherViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 10
