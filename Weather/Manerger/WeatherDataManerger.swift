@@ -19,6 +19,7 @@ struct WeatherDataManerger {
             URLQueryItem(name: "latitude", value: "25.048532613524102"),
             URLQueryItem(name: "longitude", value: "121.45355426600807"),
             URLQueryItem(name: "current", value: "temperature_2m,relative_humidity_2m,precipitation,weather_code"),
+            URLQueryItem(name: "timezone", value: "auto"),
             URLQueryItem(name: "forecast_days", value: "1")
         ]
         
@@ -50,6 +51,7 @@ struct WeatherDataManerger {
             URLQueryItem(name: "latitude", value: "25.048532613524102"),
             URLQueryItem(name: "longitude", value: "121.45355426600807"),
             URLQueryItem(name: "hourly", value: "temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,weather_code"),
+            URLQueryItem(name: "timezone", value: "auto"),
             URLQueryItem(name: "forecast_days", value: "1")
         ]
         
@@ -71,14 +73,34 @@ struct WeatherDataManerger {
         task.resume()
     }
     
+    
     //取得每日天氣資料
     func fecthdDailyData(completion: @escaping (Result<DailyData, Error>) -> Void) {
-        let urlComponents = URLComponents(string: APIConstants.baseURL)
+        var urlComponents = URLComponents(string: APIConstants.baseURL)
         
         let queryItems = [
             URLQueryItem(name: "latitude", value: "25.048532613524102"),
             URLQueryItem(name: "longitude", value: "121.45355426600807"),
-            URLQueryItem(name: "daily", value: "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max")
+            URLQueryItem(name: "daily", value: "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max"),
+            URLQueryItem(name: "timezone", value: "auto")
         ]
+        
+        urlComponents?.queryItems = queryItems
+        
+        guard let url = urlComponents?.url else { return }
+        
+        let request = URLRequest(url: url)
+        
+        let tast = URLSession.shared.dataTask(with: request) { data, _, error in
+            guard let data = data, error == nil else { return }
+            
+            do {
+                let dailyDatas = try JSONDecoder().decode(DailyData.self, from: data)
+                completion(.success(dailyDatas))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+        tast.resume()
     }
 }

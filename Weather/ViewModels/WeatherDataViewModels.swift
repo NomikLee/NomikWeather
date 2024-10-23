@@ -13,27 +13,29 @@ class WeatherDataViewModels: ObservableObject {
     @Published var currentDatas: CurrentData?
     @Published var dailyDatas: DailyData?
     
+    
     //每小時天氣資料
     func fetchWeatherHourlyData() {
         WeatherDataManerger.shared.fetchHourData{ [weak self] result in
             DispatchQueue.main.async {
                 switch result {
-                case .success(let hourlyData):
-                    self?.hourlyDatas = hourlyData
+                case .success(let data):
+                    self?.hourlyDatas = data
                 case .failure(let error):
                     print(error.localizedDescription)
                 }
             }
         }
     }
+    
     
     //當下天氣資料
     func fetchWeatherCurrentData() {
         WeatherDataManerger.shared.fetchCurrentData { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
-                case .success(let currentData):
-                    self?.currentDatas = currentData
+                case .success(let data):
+                    self?.currentDatas = data
                 case .failure(let error):
                     print(error.localizedDescription)
                 }
@@ -41,12 +43,13 @@ class WeatherDataViewModels: ObservableObject {
         }
     }
     
+    
     //每日天氣資料
     func fetchWeatherDailyData() {
         WeatherDataManerger.shared.fecthdDailyData { [weak self] result in
             switch result {
-            case .success(let dailyData):
-                self?.dailyDatas = dailyData
+            case .success(let data):
+                self?.dailyDatas = data
             case .failure(let error):
                 print(error.localizedDescription)
             }
