@@ -108,14 +108,21 @@ class HomeHeaderView: UIView {
     // MARK: - Functions
     private func bindView() {
         viewModel.fetchWeatherCurrentData()
+        viewModel.fetchWeatherDailyData()
+        
         viewModel.$currentDatas.sink { [weak self] data in
-            guard let code = data?.current.weatherCode, let tempOptional = data?.current.temperature2m else { return }
-            var temp = tempOptional
+            guard let code = data?.current.weatherCode, let temp = data?.current.temperature2m else { return }
             self?.weatherWmoCheck(code)
             self?.weatherCurrentTemperature.text = "\(Int(round(temp))) °c"
         }
         .store(in: &cancellables)
         
+        viewModel.$dailyDatas.sink { [weak self] data in
+            guard let tempMax = data?.daily.temperature2mMax.first, let tempMin = data?.daily.temperature2mMin.first else { return }
+            self?.weatherTemperatureMaxNum.text = "\(Int(round(tempMax))) °c"
+            self?.weatherTemperatureMinNum.text = "\(Int(round(tempMin))) °c"
+        }
+        .store(in: &cancellables)
         
     }
     

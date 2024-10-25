@@ -47,11 +47,13 @@ class WeatherDataViewModels: ObservableObject {
     //每日天氣資料
     func fetchWeatherDailyData() {
         WeatherDataManerger.shared.fecthdDailyData { [weak self] result in
-            switch result {
-            case .success(let data):
-                self?.dailyDatas = data
-            case .failure(let error):
-                print(error.localizedDescription)
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let data):
+                    self?.dailyDatas = data
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
             }
         }
     }
