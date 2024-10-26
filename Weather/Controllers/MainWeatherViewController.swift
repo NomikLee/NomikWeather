@@ -17,7 +17,8 @@ class MainWeatherViewController: UIViewController {
     // MARK: - UI Components
     private let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(MainWeatherTableViewCell.self , forCellReuseIdentifier: MainWeatherTableViewCell.identifier)
+        tableView.register(HourlyWeatherTableViewCell.self , forCellReuseIdentifier: HourlyWeatherTableViewCell.identifier)
+        tableView.register(DailyWeatherTableViewCell.self, forCellReuseIdentifier: DailyWeatherTableViewCell.identifier)
         return tableView
     }()
     
@@ -71,11 +72,14 @@ extension MainWeatherViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: MainWeatherTableViewCell.identifier, for: indexPath) as? MainWeatherTableViewCell else { return UITableViewCell() }
-        cell.backgroundColor = .systemRed
-        return cell
+        switch indexPath.section {
+        case 0:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: HourlyWeatherTableViewCell.identifier, for: indexPath) as? HourlyWeatherTableViewCell else { return UITableViewCell() }
+            return cell
+        default:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: DailyWeatherTableViewCell.identifier, for: indexPath) as? DailyWeatherTableViewCell else { return UITableViewCell() }
+            return cell
+        }
     }
-    
-    
 }
 
