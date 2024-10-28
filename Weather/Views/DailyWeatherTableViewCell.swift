@@ -13,48 +13,62 @@ class DailyWeatherTableViewCell: UITableViewCell {
     
     // MARK: - Variables
     // MARK: - UI Components
-    private let collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: 80, height: 130)
-        layout.scrollDirection = .horizontal
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.register(DailyCollectionViewCell.self, forCellWithReuseIdentifier: DailyCollectionViewCell.identifier)
-        collectionView.showsHorizontalScrollIndicator = false
-        return collectionView
+    private let dateDailyLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "週一"
+        label.font = .systemFont(ofSize: 20, weight: .bold)
+        label.textAlignment = .center
+        return label
     }()
     
     // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(collectionView)
+        contentView.backgroundColor = .systemBlue
+        contentView.addSubview(dateDailyLabel)
         
-        collectionView.delegate = self
-        collectionView.dataSource = self
+        configureUI()
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        collectionView.frame = contentView.bounds
+    // MARK: - Functions
+    public func configureDailyData(to dateDaily: String) {
+        guard let formatterWeekDate = formatterWeek(from: dateDaily) else { return }
+        dateDailyLabel.text = "週\(formatterWeekDate)"
     }
     
-    // MARK: - Functions
+    //把日期轉成星期
+    private func formatterWeek(from dateString: String) -> String.SubSequence? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd" // 日期格式進行解析
+        dateFormatter.locale = Locale(identifier: "zh_Hant") // 設定繁體中文
+
+        if let date = dateFormatter.date(from: dateString) {
+            dateFormatter.dateFormat = "EEEE" // "EEEE" 顯示完整的星期名稱
+            let dataSplit = dateFormatter.string(from: date)
+            return dataSplit.split(separator: "星期").last //切割星期部分只能數字字串
+        }
+        return nil
+    }
+    
     // MARK: - Selectors
     // MARK: - UI Setup
+    private func configureUI() {
+        NSLayoutConstraint.activate([
+            dateDailyLabel.topAnchor.constraint(equalTo: contentView.topAnchor),
+            dateDailyLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            dateDailyLabel.widthAnchor.constraint(equalToConstant: 50),
+            dateDailyLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+        ])
+    }
 }
 // MARK: - Extension
-extension DailyWeatherTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DailyCollectionViewCell.identifier, for: indexPath) as? DailyCollectionViewCell else { return UICollectionViewCell() }
-        cell.backgroundColor = .systemBlue
-        return cell
-    }
-}
+

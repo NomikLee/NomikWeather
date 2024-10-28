@@ -20,6 +20,9 @@ class TabbarViewController: UITabBarController {
         vc2.tabBarItem.image = UIImage(systemName: "house")
         vc3.tabBarItem.image = UIImage(systemName: "gearshape")
         
+        tabBar.backgroundColor = UIColor(red: 38/255, green: 33/255, blue: 69/255, alpha: 1)
+        tabBar.isTranslucent = false
+        
         let nav1 = UINavigationController(rootViewController: vc1)
         let nav2 = UINavigationController(rootViewController: vc2)
         let nav3 = UINavigationController(rootViewController: vc3)

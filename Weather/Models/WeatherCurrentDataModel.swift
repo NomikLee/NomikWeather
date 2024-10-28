@@ -18,6 +18,7 @@ struct Current: Codable {
     let interval: Int
     let temperature2m: Double
     let relativeHumidity2m: Double
+    let isDay: Int
     let precipitation: Double
     let weatherCode: Int
     
@@ -26,6 +27,7 @@ struct Current: Codable {
         case interval
         case temperature2m = "temperature_2m"
         case relativeHumidity2m = "relative_humidity_2m"
+        case isDay = "is_day"
         case precipitation
         case weatherCode = "weather_code"
     }

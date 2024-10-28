@@ -19,34 +19,35 @@ class HourlyWeatherTableViewCell: UITableViewCell {
     // MARK: - UI Components
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: 80, height: 130)
+        layout.itemSize = CGSize(width: 80, height: 150)
         layout.scrollDirection = .horizontal
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(HourlyCollectionViewCell.self, forCellWithReuseIdentifier: HourlyCollectionViewCell.identifier)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.backgroundColor = .clear
         return collectionView
     }()
     
     // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = .systemBackground
         contentView.addSubview(collectionView)
         
         bindView()
+        configureUI()
         
         collectionView.delegate = self
         collectionView.dataSource = self
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    override func prepareForReuse() {
+        super.prepareForReuse()
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        collectionView.frame = contentView.bounds
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - Functions
@@ -60,6 +61,16 @@ class HourlyWeatherTableViewCell: UITableViewCell {
     
     // MARK: - Selectors
     // MARK: - UI Setup
+    private func configureUI() {
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5),
+            collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+        ])
+    }
+    
+    
 }
 // MARK: - Extension
 extension HourlyWeatherTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -69,12 +80,20 @@ extension HourlyWeatherTableViewCell: UICollectionViewDelegate, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HourlyCollectionViewCell.identifier, for: indexPath) as? HourlyCollectionViewCell else { return UICollectionViewCell() }
-        cell.configureHourlyData(to: viewModel.hourlyDatas?.hourly.precipitationProbability[indexPath.row] ?? 0,
-                                 hourlyWeatherCode: viewModel.hourlyDatas?.hourly.weatherCode[indexPath.row] ?? 0,
-                                 hourTemperature: viewModel.hourlyDatas?.hourly.temperature2m[indexPath.row] ?? 0.0,
-                                 hourTime: viewModel.hourlyDatas?.hourly.time[indexPath.row] ?? "")
-        cell.backgroundColor = .systemPink
-        cell.layer.cornerRadius = 10
+        
+        let nowTime = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH"                 // 格式為小時
+        dateFormatter.timeZone = TimeZone.current       // 目前時區
+        let timeString = dateFormatter.string(from: nowTime)
+        
+        cell.configureHourlyData(to: viewModel.hourlyDatas?.hourly.precipitationProbability[indexPath.row + Int(timeString)!] ?? 0,
+                                 hourlyWeatherCode: viewModel.hourlyDatas?.hourly.weatherCode[indexPath.row + Int(timeString)!] ?? 0,
+                                 hourTemperature: viewModel.hourlyDatas?.hourly.temperature2m[indexPath.row + Int(timeString)!] ?? 0.0,
+                                 hourTime: viewModel.hourlyDatas?.hourly.time[indexPath.row + Int(timeString)!] ?? "")
+        cell.backgroundColor = UIColor(red: 38/255, green: 33/255, blue: 69/255, alpha: 1)
+        cell.layer.cornerRadius = 15
         return cell
+
     }
 }

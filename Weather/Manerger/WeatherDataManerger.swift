@@ -18,7 +18,7 @@ struct WeatherDataManerger {
         let queryItems = [
             URLQueryItem(name: "latitude", value: "25.048532613524102"),
             URLQueryItem(name: "longitude", value: "121.45355426600807"),
-            URLQueryItem(name: "current", value: "temperature_2m,relative_humidity_2m,precipitation,weather_code"),
+            URLQueryItem(name: "current", value: "temperature_2m,relative_humidity_2m,is_day,precipitation,weather_code"),
             URLQueryItem(name: "timezone", value: "auto"),
             URLQueryItem(name: "forecast_days", value: "1")
         ]
@@ -52,7 +52,7 @@ struct WeatherDataManerger {
             URLQueryItem(name: "longitude", value: "121.45355426600807"),
             URLQueryItem(name: "hourly", value: "temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,weather_code"),
             URLQueryItem(name: "timezone", value: "auto"),
-            URLQueryItem(name: "forecast_days", value: "1")
+            URLQueryItem(name: "forecast_days", value: "2")
         ]
         
         urlComponents?.queryItems = queryItems
@@ -82,6 +82,7 @@ struct WeatherDataManerger {
             URLQueryItem(name: "latitude", value: "25.048532613524102"),
             URLQueryItem(name: "longitude", value: "121.45355426600807"),
             URLQueryItem(name: "daily", value: "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max"),
+            URLQueryItem(name: "forecast_days", value: "14"),
             URLQueryItem(name: "timezone", value: "auto")
         ]
         

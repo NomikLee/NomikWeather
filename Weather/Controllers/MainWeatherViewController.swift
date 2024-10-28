@@ -12,11 +12,23 @@ class MainWeatherViewController: UIViewController {
     
     // MARK: - Variables
     private var viewModel = WeatherDataViewModels()
-    private var cancellables: Set<AnyCancellable> = []
+    private var cancellables: Set<AnyCancellable> = [] //AnyCancellable 使用
     
     // MARK: - UI Components
+    private let backgroundImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = false
+        return imageView
+    }()
+    
     private let tableView: UITableView = {
         let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.showsVerticalScrollIndicator = false //關閉Scroll線
+        tableView.backgroundColor = .clear
+        tableView.separatorStyle = .none
         tableView.register(HourlyWeatherTableViewCell.self , forCellReuseIdentifier: HourlyWeatherTableViewCell.identifier)
         tableView.register(DailyWeatherTableViewCell.self, forCellReuseIdentifier: DailyWeatherTableViewCell.identifier)
         return tableView
@@ -25,59 +37,144 @@ class MainWeatherViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.setNavigationBarHidden(true, animated: true)
+        navigationController?.setNavigationBarHidden(true, animated: true) //不使用NavigationBar
+        view.backgroundColor = UIColor(red: 66/255, green: 56/255, blue: 119/255, alpha: 1)
+        
+        view.addSubview(backgroundImageView)
         view.addSubview(tableView)
         
-        //設定header畫面資訊
-        let headerView = HomeHeaderView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 400))
+        //初始設定header畫面並且放入tableHeaderView
+        let headerView = HomeHeaderView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 500))
         tableView.tableHeaderView = headerView
         
         tableView.delegate = self
         tableView.dataSource = self
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        tableView.frame = view.bounds
+        
+        configureUI()
+        changeDayEvening()
     }
     
     // MARK: - Functions
+    private func changeDayEvening() {
+        viewModel.fetchWeatherCurrentData()
+        viewModel.fetchWeatherDailyData()
+        
+        viewModel.$currentDatas.sink { [weak self] data in
+            if data?.current.isDay == 1 {
+                self?.backgroundImageView.image = UIImage(named: "sum")
+            }else {
+                self?.backgroundImageView.image = UIImage(named: "black")
+            }
+        }
+        .store(in: &cancellables)
+        
+        viewModel.$dailyDatas.sink { [weak self] _ in
+            self?.tableView.reloadData()
+        }
+        .store(in: &cancellables)
+    }
+    
     // MARK: - Selectors
     // MARK: - UI Setup
+    private func configureUI() {
+        NSLayoutConstraint.activate([
+            backgroundImageView.topAnchor.constraint(equalTo: view.topAnchor),
+            backgroundImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            backgroundImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            backgroundImageView.heightAnchor.constraint(equalToConstant: 580),
+            
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
 }
 
 // MARK: - Extension
 extension MainWeatherViewController: UITableViewDelegate, UITableViewDataSource {
+    //Sections數量
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 150
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    //修改Header的高度
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch section {
         case 0:
-            return "每小時天氣變化"
-        case 1:
-            return "這週天氣變化"
+            return 3
         default:
-            return "----"
+            return 35
         }
     }
     
+    //Sections的row數量
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch section {
+        case 0:
+            return 1
+        default:
+            return 10
+        }
+    }
+    
+    //row的高度
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch indexPath.section {
+        case 0:
+            return 150
+        default:
+            return 50
+        }
+    }
+    
+    //自己定義section的ui介面
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let label: UILabel = {
+            let label = UILabel()
+            label.font = .systemFont(ofSize: 30, weight: .semibold)
+            label.textAlignment = .left
+            label.textColor = .systemBrown
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
+
+        let headerView: UIView = {
+            let view = UIView()
+            return view
+        }()
+        
+        headerView.addSubview(label)
+        
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
+            label.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
+            label.topAnchor.constraint(equalTo: headerView.topAnchor),
+            label.bottomAnchor.constraint(equalTo: headerView.bottomAnchor)
+        ])
+        
+        switch section {
+        case 0:
+            return headerView
+        default:
+            label.text = "每日天氣"
+            return headerView
+        }
+    }
+    
+    //UITableView 準備顯示某一行時呼叫
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        //tableView 的 dequeueReusableCell 來取得可重複使用的 cell
         switch indexPath.section {
         case 0:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: HourlyWeatherTableViewCell.identifier, for: indexPath) as? HourlyWeatherTableViewCell else { return UITableViewCell() }
+            cell.backgroundColor = .clear
             return cell
         default:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: DailyWeatherTableViewCell.identifier, for: indexPath) as? DailyWeatherTableViewCell else { return UITableViewCell() }
+            cell.configureDailyData(to: viewModel.dailyDatas?.daily.time[indexPath.row] ?? "")
+            cell.backgroundColor = .clear
             return cell
         }
     }

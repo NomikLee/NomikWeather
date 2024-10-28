@@ -44,10 +44,9 @@ class HomeHeaderView: UIView {
     private let weatherTemperatureMax: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
         label.textColor = .systemRed
         label.text = "高"
-        label.font = .systemFont(ofSize: 24, weight: .heavy)
+        label.font = .systemFont(ofSize: 18, weight: .heavy)
         label.textAlignment = .center
         return label
     }()
@@ -55,9 +54,8 @@ class HomeHeaderView: UIView {
     private let weatherTemperatureMaxNum: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
-        label.text = "27 °c"
-        label.font = .systemFont(ofSize: 34, weight: .bold)
+        label.text = "-- °c"
+        label.font = .systemFont(ofSize: 16, weight: .bold)
         label.textAlignment = .center
         return label
     }()
@@ -65,10 +63,9 @@ class HomeHeaderView: UIView {
     private let weatherTemperatureMin: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
         label.textColor = .systemBlue
         label.text = "低"
-        label.font = .systemFont(ofSize: 24, weight: .heavy)
+        label.font = .systemFont(ofSize: 18, weight: .heavy)
         label.textAlignment = .center
         return label
     }()
@@ -77,8 +74,8 @@ class HomeHeaderView: UIView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
-        label.text = "-18 °c"
-        label.font = .systemFont(ofSize: 34, weight: .bold)
+        label.text = "-- °c"
+        label.font = .systemFont(ofSize: 16, weight: .bold)
         label.textAlignment = .center
         return label
     }()
@@ -225,40 +222,40 @@ class HomeHeaderView: UIView {
     // MARK: - UI Setup
     private func configureUI() {
         NSLayoutConstraint.activate([
-            weatherImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            weatherImageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 50),
-            weatherImageView.widthAnchor.constraint(equalToConstant: 200),
-            weatherImageView.heightAnchor.constraint(equalToConstant: 150),
+            weatherImageView.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 50),
+            weatherImageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 270),
+            weatherImageView.widthAnchor.constraint(equalToConstant: 50),
+            weatherImageView.heightAnchor.constraint(equalToConstant: 50),
+            
+            weatherNameLabel.topAnchor.constraint(equalTo: weatherImageView.topAnchor),
+            weatherNameLabel.leadingAnchor.constraint(equalTo: weatherImageView.trailingAnchor),
+            weatherNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            weatherNameLabel.heightAnchor.constraint(equalToConstant: 50),
             
             weatherCurrentTemperature.topAnchor.constraint(equalTo: weatherImageView.bottomAnchor),
-            weatherCurrentTemperature.leadingAnchor.constraint(equalTo: leadingAnchor),
+            weatherCurrentTemperature.leadingAnchor.constraint(equalTo: weatherImageView.leadingAnchor),
             weatherCurrentTemperature.trailingAnchor.constraint(equalTo: trailingAnchor),
-            weatherCurrentTemperature.heightAnchor.constraint(equalToConstant: 50),
+            weatherCurrentTemperature.heightAnchor.constraint(equalToConstant: 60),
             
-            weatherNameLabel.topAnchor.constraint(equalTo: weatherCurrentTemperature.bottomAnchor),
-            weatherNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            weatherNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            weatherNameLabel.heightAnchor.constraint(equalToConstant: 40),
-            
-            weatherTemperatureMaxNum.topAnchor.constraint(equalTo: weatherNameLabel.bottomAnchor),
-            weatherTemperatureMaxNum.trailingAnchor.constraint(equalTo: centerXAnchor, constant: -10),
-            weatherTemperatureMaxNum.widthAnchor.constraint(equalToConstant: 100),
-            weatherTemperatureMaxNum.heightAnchor.constraint(equalToConstant: 100),
-            
-            weatherTemperatureMax.topAnchor.constraint(equalTo: weatherNameLabel.bottomAnchor),
-            weatherTemperatureMax.trailingAnchor.constraint(equalTo: weatherTemperatureMaxNum.leadingAnchor),
+            weatherTemperatureMax.topAnchor.constraint(equalTo: weatherCurrentTemperature.bottomAnchor),
+            weatherTemperatureMax.leadingAnchor.constraint(equalTo: weatherCurrentTemperature.leadingAnchor),
             weatherTemperatureMax.widthAnchor.constraint(equalToConstant: 30),
-            weatherTemperatureMax.heightAnchor.constraint(equalToConstant: 100),
+            weatherTemperatureMax.heightAnchor.constraint(equalToConstant: 50),
             
-            weatherTemperatureMin.topAnchor.constraint(equalTo: weatherNameLabel.bottomAnchor),
-            weatherTemperatureMin.leadingAnchor.constraint(equalTo: centerXAnchor, constant: 10),
+            weatherTemperatureMaxNum.topAnchor.constraint(equalTo: weatherTemperatureMax.topAnchor),
+            weatherTemperatureMaxNum.leadingAnchor.constraint(equalTo: weatherTemperatureMax.trailingAnchor),
+            weatherTemperatureMaxNum.widthAnchor.constraint(equalToConstant: 50),
+            weatherTemperatureMaxNum.heightAnchor.constraint(equalToConstant: 50),
+            
+            weatherTemperatureMin.topAnchor.constraint(equalTo: weatherTemperatureMax.topAnchor),
+            weatherTemperatureMin.leadingAnchor.constraint(equalTo: weatherTemperatureMaxNum.trailingAnchor),
             weatherTemperatureMin.widthAnchor.constraint(equalToConstant: 30),
-            weatherTemperatureMin.heightAnchor.constraint(equalToConstant: 100),
+            weatherTemperatureMin.heightAnchor.constraint(equalToConstant: 50),
             
-            weatherTemperatureMinNum.topAnchor.constraint(equalTo: weatherNameLabel.bottomAnchor),
+            weatherTemperatureMinNum.topAnchor.constraint(equalTo: weatherTemperatureMin.topAnchor),
             weatherTemperatureMinNum.leadingAnchor.constraint(equalTo: weatherTemperatureMin.trailingAnchor),
-            weatherTemperatureMinNum.widthAnchor.constraint(equalToConstant: 100),
-            weatherTemperatureMinNum.heightAnchor.constraint(equalToConstant: 100)
+            weatherTemperatureMinNum.widthAnchor.constraint(equalToConstant: 50),
+            weatherTemperatureMinNum.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
 }

@@ -45,6 +45,7 @@ class HourlyCollectionViewCell: UICollectionViewCell {
         label.numberOfLines = 0
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 18, weight: .semibold)
+//        label.backgroundColor = .systemGray2
         return label
     }()
     
@@ -65,11 +66,23 @@ class HourlyCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Functions
     public func configureHourlyData(to probability: Int, hourlyWeatherCode: Int, hourTemperature: Double, hourTime: String) {
+        guard let hourTimeSplit = hourTime.split(separator: "T").last else { return }
+        
+        let nowTime = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH"                 // 格式為小時
+        dateFormatter.timeZone = TimeZone.current       // 目前時區
+        let timeString = dateFormatter.string(from: nowTime)
+        
         rainProbability.text = "\(probability)%"
         hourlyWeatherIconCheck(hourlyWeatherCode: hourlyWeatherCode)
-        hourTemperatureLabel.text = "\(Int(round(hourTemperature)))"
-        guard let hourTimeSplit = hourTime.split(separator: "T").last else { return }
-        hourTimeLabel.text = "\(hourTimeSplit)"
+        hourTemperatureLabel.text = "\(Int(round(hourTemperature))) °c"
+        
+        if hourTimeSplit.split(separator: ":").first! == timeString {
+            hourTimeLabel.text = "目前"
+        }else {
+            hourTimeLabel.text = "\(hourTimeSplit)"
+        }
     }
     
     private func hourlyWeatherIconCheck(hourlyWeatherCode: Int) {
@@ -142,7 +155,7 @@ class HourlyCollectionViewCell: UICollectionViewCell {
     private func configureUI() {
         NSLayoutConstraint.activate([
             rainProbability.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            rainProbability.topAnchor.constraint(equalTo: contentView.topAnchor),
+            rainProbability.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             rainProbability.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             rainProbability.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             rainProbability.heightAnchor.constraint(equalToConstant: 30),
