@@ -15,8 +15,8 @@ class WeatherDataViewModels: ObservableObject {
     
     
     //每小時天氣資料
-    func fetchWeatherHourlyData() {
-        WeatherDataManerger.shared.fetchHourData{ [weak self] result in
+    func fetchWeatherHourlyData(latitude: String, longitude: String) {
+        WeatherDataManerger.shared.fetchHourData(latitude: latitude, longitude: longitude) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let data):
@@ -30,8 +30,8 @@ class WeatherDataViewModels: ObservableObject {
     
     
     //當下天氣資料
-    func fetchWeatherCurrentData() {
-        WeatherDataManerger.shared.fetchCurrentData { [weak self] result in
+    func fetchWeatherCurrentData(latitude: String, longitude: String) {
+        WeatherDataManerger.shared.fetchCurrentData(latitude: latitude, longitude: longitude) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let data):
@@ -45,8 +45,8 @@ class WeatherDataViewModels: ObservableObject {
     
     
     //每日天氣資料
-    func fetchWeatherDailyData() {
-        WeatherDataManerger.shared.fecthdDailyData { [weak self] result in
+    func fetchWeatherDailyData(latitude: String, longitude: String) {
+        WeatherDataManerger.shared.fecthdDailyData(latitude: latitude, longitude: longitude) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let data):

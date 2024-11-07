@@ -19,6 +19,7 @@ class HomeHeaderView: UIView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
+        imageView.tintColor = .systemGreen
         return imageView
     }()
     
@@ -104,8 +105,11 @@ class HomeHeaderView: UIView {
     
     // MARK: - Functions
     private func bindView() {
-        viewModel.fetchWeatherCurrentData()
-        viewModel.fetchWeatherDailyData()
+        LocationManerger.shared.updateLocationSubject.sink { [weak self] location in
+            self?.viewModel.fetchWeatherCurrentData(latitude: location.latitude.description, longitude: location.longitude.description)
+            self?.viewModel.fetchWeatherDailyData(latitude: location.latitude.description, longitude: location.longitude.description)
+        }
+        .store(in: &cancellables)
         
         viewModel.$currentDatas.sink { [weak self] data in
             guard let code = data?.current.weatherCode, let temp = data?.current.temperature2m else { return }

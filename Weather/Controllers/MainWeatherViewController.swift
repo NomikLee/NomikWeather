@@ -38,7 +38,6 @@ class MainWeatherViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.setNavigationBarHidden(true, animated: true) //不使用NavigationBar
-        view.backgroundColor = UIColor(red: 66/255, green: 56/255, blue: 119/255, alpha: 1)
         
         view.addSubview(backgroundImageView)
         view.addSubview(tableView)
@@ -56,8 +55,11 @@ class MainWeatherViewController: UIViewController {
     
     // MARK: - Functions
     private func changeDayEvening() {
-        viewModel.fetchWeatherCurrentData()
-        viewModel.fetchWeatherDailyData()
+        LocationManerger.shared.updateLocationSubject.sink { [weak self] location in
+            self?.viewModel.fetchWeatherCurrentData(latitude: location.latitude.description, longitude: location.longitude.description)
+            self?.viewModel.fetchWeatherDailyData(latitude: location.latitude.description, longitude: location.longitude.description)
+        }
+        .store(in: &cancellables)
         
         viewModel.$currentDatas.sink { [weak self] data in
             if data?.current.isDay == 1 {
@@ -81,7 +83,7 @@ class MainWeatherViewController: UIViewController {
             backgroundImageView.topAnchor.constraint(equalTo: view.topAnchor),
             backgroundImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             backgroundImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            backgroundImageView.heightAnchor.constraint(equalToConstant: 580),
+            backgroundImageView.heightAnchor.constraint(equalToConstant: view.bounds.height),
             
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
@@ -124,7 +126,7 @@ extension MainWeatherViewController: UITableViewDelegate, UITableViewDataSource 
         case 0:
             return 150
         default:
-            return 50
+            return 60
         }
     }
     
@@ -173,7 +175,12 @@ extension MainWeatherViewController: UITableViewDelegate, UITableViewDataSource 
             return cell
         default:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: DailyWeatherTableViewCell.identifier, for: indexPath) as? DailyWeatherTableViewCell else { return UITableViewCell() }
-            cell.configureDailyData(to: viewModel.dailyDatas?.daily.time[indexPath.row] ?? "")
+            
+            cell.configureDailyData(to: viewModel.dailyDatas?.daily.time[indexPath.row] ?? "",
+                                    dailyCode: viewModel.dailyDatas?.daily.weatherCode[indexPath.row] ?? 0,
+                                    dailyProbability: viewModel.dailyDatas?.daily.precipitationProbabilityMax[indexPath.row] ?? 0,
+                                    dailyPrecipitationSum: viewModel.dailyDatas?.daily.precipitationSum[indexPath.row] ?? 0.0,
+                                    dailyMaxTemp: viewModel.dailyDatas?.daily.temperature2mMax[indexPath.row] ?? 0.0, dailyMinTemp: viewModel.dailyDatas?.daily.temperature2mMin[indexPath.row] ?? 0.0)
             cell.backgroundColor = .clear
             return cell
         }

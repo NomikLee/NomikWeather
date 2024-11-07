@@ -33,6 +33,7 @@ class HourlyWeatherTableViewCell: UITableViewCell {
     // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        contentView.alpha = 0.7
         contentView.addSubview(collectionView)
         
         bindView()
@@ -52,7 +53,11 @@ class HourlyWeatherTableViewCell: UITableViewCell {
     
     // MARK: - Functions
     private func bindView() {
-        viewModel.fetchWeatherHourlyData()
+        LocationManerger.shared.updateLocationSubject.sink { [weak self] location in
+            self?.viewModel.fetchWeatherHourlyData(latitude: location.latitude.description, longitude: location.longitude.description)
+        }
+        .store(in: &cancellables)
+        
         viewModel.$hourlyDatas.sink { [weak self] _ in
             self?.collectionView.reloadData()
         }
@@ -91,7 +96,7 @@ extension HourlyWeatherTableViewCell: UICollectionViewDelegate, UICollectionView
                                  hourlyWeatherCode: viewModel.hourlyDatas?.hourly.weatherCode[indexPath.row + Int(timeString)!] ?? 0,
                                  hourTemperature: viewModel.hourlyDatas?.hourly.temperature2m[indexPath.row + Int(timeString)!] ?? 0.0,
                                  hourTime: viewModel.hourlyDatas?.hourly.time[indexPath.row + Int(timeString)!] ?? "")
-        cell.backgroundColor = UIColor(red: 38/255, green: 33/255, blue: 69/255, alpha: 1)
+        cell.backgroundColor = .systemIndigo
         cell.layer.cornerRadius = 15
         return cell
 

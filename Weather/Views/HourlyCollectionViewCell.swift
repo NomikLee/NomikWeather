@@ -27,25 +27,23 @@ class HourlyCollectionViewCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
+        imageView.tintColor = .systemOrange
         return imageView
     }()
     
     private let hourTemperatureLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 18, weight: .semibold)
+        label.font = .systemFont(ofSize: 25, weight: .bold)
         return label
     }()
     
     private let hourTimeLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 18, weight: .semibold)
-//        label.backgroundColor = .systemGray2
         return label
     }()
     
@@ -76,7 +74,7 @@ class HourlyCollectionViewCell: UICollectionViewCell {
         
         rainProbability.text = "\(probability)%"
         hourlyWeatherIconCheck(hourlyWeatherCode: hourlyWeatherCode)
-        hourTemperatureLabel.text = "\(Int(round(hourTemperature))) °c"
+        hourTemperatureLabel.text = "\(Int(round(hourTemperature)))°"
         
         if hourTimeSplit.split(separator: ":").first! == timeString {
             hourTimeLabel.text = "目前"
