@@ -15,6 +15,20 @@ class HomeHeaderView: UIView {
     private var cancellables: Set<AnyCancellable> = []
     
     // MARK: - UI Components
+    private let localCityName: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .systemFont(ofSize: 45, weight: .semibold)
+        label.textColor = .systemOrange
+        label.layer.cornerRadius = 15
+        label.layer.masksToBounds = true
+        label.backgroundColor = .black
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.sizeToFit()
+        return label
+    }()
+    
     private let weatherImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -91,6 +105,7 @@ class HomeHeaderView: UIView {
         addSubview(weatherTemperatureMaxNum)
         addSubview(weatherTemperatureMin)
         addSubview(weatherTemperatureMinNum)
+        addSubview(localCityName)
         
         configureUI()
         bindView()
@@ -105,6 +120,11 @@ class HomeHeaderView: UIView {
     
     // MARK: - Functions
     private func bindView() {
+        LocationManerger.shared.updateLocationNameSubject.sink { [weak self] locationName in
+            self?.localCityName.text = "✤ \(locationName) "
+        }
+        .store(in: &cancellables)
+        
         LocationManerger.shared.updateLocationSubject.sink { [weak self] location in
             self?.viewModel.fetchWeatherCurrentData(latitude: location.latitude.description, longitude: location.longitude.description)
             self?.viewModel.fetchWeatherDailyData(latitude: location.latitude.description, longitude: location.longitude.description)
@@ -226,6 +246,9 @@ class HomeHeaderView: UIView {
     // MARK: - UI Setup
     private func configureUI() {
         NSLayoutConstraint.activate([
+            localCityName.topAnchor.constraint(equalTo: topAnchor, constant: 15),
+            localCityName.centerXAnchor.constraint(equalTo: centerXAnchor),
+            
             weatherImageView.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 50),
             weatherImageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 270),
             weatherImageView.widthAnchor.constraint(equalToConstant: 50),

@@ -14,6 +14,7 @@ class LocationManerger: NSObject {
     static let shared = LocationManerger()
     
     var updateLocationSubject = PassthroughSubject<CLLocationCoordinate2D, Never>()
+    var updateLocationNameSubject = PassthroughSubject<String, Never>()
     
     lazy var locationManerger: CLLocationManager = {
         let location = CLLocationManager()
@@ -55,10 +56,17 @@ extension LocationManerger: CLLocationManagerDelegate {
     
     //當Location成功更新位置時觸發
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.last?.coordinate {
-            locationManerger.stopUpdatingLocation()
-            updateLocationSubject.send(location)
-        }
+        guard let locationCoordinate = locations.last?.coordinate, let location = locations.last else { return }
+        
+        let geocoder = CLGeocoder()
+        geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
+                if let placemark = placemarks?.first {
+                    let city = placemark.locality
+                    self.updateLocationNameSubject.send(city ?? "無地點")
+                }
+            }
+        locationManerger.stopUpdatingLocation()
+        updateLocationSubject.send(locationCoordinate)
     }
     
     //當Location失敗時觸發error

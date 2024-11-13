@@ -38,7 +38,6 @@ class MainWeatherViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.setNavigationBarHidden(true, animated: true) //不使用NavigationBar
-        
         view.addSubview(backgroundImageView)
         view.addSubview(tableView)
         
@@ -135,8 +134,8 @@ extension MainWeatherViewController: UITableViewDelegate, UITableViewDataSource 
         let label: UILabel = {
             let label = UILabel()
             label.font = .systemFont(ofSize: 30, weight: .semibold)
-            label.textAlignment = .left
-            label.textColor = .systemBrown
+            label.textAlignment = .right
+            label.textColor = .white
             label.translatesAutoresizingMaskIntoConstraints = false
             return label
         }()
@@ -159,7 +158,7 @@ extension MainWeatherViewController: UITableViewDelegate, UITableViewDataSource 
         case 0:
             return headerView
         default:
-            label.text = "每日天氣"
+            label.text = "未來十日天氣"
             return headerView
         }
     }
@@ -184,6 +183,10 @@ extension MainWeatherViewController: UITableViewDelegate, UITableViewDataSource 
             cell.backgroundColor = .clear
             return cell
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true) //讓點選時高亮取消
     }
 }
 

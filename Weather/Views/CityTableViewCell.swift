@@ -95,6 +95,110 @@ class CityTableViewCell: UITableViewCell {
     }
     
     // MARK: - Functions
+    public func configureCityData(code: Int, name: String, Temp: Double, highTemp: Double, lowTemp: Double) {
+        cityIconCheck(cityWeatherCode: code)
+        cityName.text = "\(name)"
+        cityWeatherTemp.text = "\(Temp)"
+        cityWeatherHighTemp.text = "\(highTemp)"
+        cityWeatherLowTemp.text = "\(lowTemp)"
+    }
+    
+    //天氣icon判斷
+    private func cityIconCheck(cityWeatherCode: Int) {
+        switch cityWeatherCode {
+        case WeatherWmo.clearSky.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.clearSky.weatherIconImage
+            cityWeatherName.text = WeatherWmo.clearSky.weatherChinese
+        case WeatherWmo.mainlyClear.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.mainlyClear.weatherIconImage
+            cityWeatherName.text = WeatherWmo.mainlyClear.weatherChinese
+        case WeatherWmo.partlyCloudy.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.partlyCloudy.weatherIconImage
+            cityWeatherName.text = WeatherWmo.partlyCloudy.weatherChinese
+        case WeatherWmo.Overcast.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.Overcast.weatherIconImage
+            cityWeatherName.text = WeatherWmo.Overcast.weatherChinese
+        case WeatherWmo.fog.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.fog.weatherIconImage
+            cityWeatherName.text = WeatherWmo.fog.weatherChinese
+        case WeatherWmo.depositingRimeFog.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.depositingRimeFog.weatherIconImage
+            cityWeatherName.text = WeatherWmo.depositingRimeFog.weatherChinese
+        case WeatherWmo.drizzleLight.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.drizzleLight.weatherIconImage
+            cityWeatherName.text = WeatherWmo.drizzleLight.weatherChinese
+        case WeatherWmo.drizzleModerate.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.drizzleModerate.weatherIconImage
+            cityWeatherName.text = WeatherWmo.drizzleModerate.weatherChinese
+        case WeatherWmo.drizzleDenseIntensity.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.drizzleDenseIntensity.weatherIconImage
+            cityWeatherName.text = WeatherWmo.drizzleDenseIntensity.weatherChinese
+        case WeatherWmo.freezingDrizzleLight.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.freezingDrizzleLight.weatherIconImage
+            cityWeatherName.text = WeatherWmo.freezingDrizzleLight.weatherChinese
+        case WeatherWmo.freezingDrizzleDenseIntensity.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.freezingDrizzleDenseIntensity.weatherIconImage
+            cityWeatherName.text = WeatherWmo.freezingDrizzleDenseIntensity.weatherChinese
+        case WeatherWmo.rainSlight.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.rainSlight.weatherIconImage
+            cityWeatherName.text = WeatherWmo.rainSlight.weatherChinese
+        case WeatherWmo.rainModerate.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.rainModerate.weatherIconImage
+            cityWeatherName.text = WeatherWmo.rainModerate.weatherChinese
+        case WeatherWmo.rainHeavyIntensity.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.rainHeavyIntensity.weatherIconImage
+            cityWeatherName.text = WeatherWmo.rainHeavyIntensity.weatherChinese
+        case WeatherWmo.freezingRainLight.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.freezingRainLight.weatherIconImage
+            cityWeatherName.text = WeatherWmo.freezingRainLight.weatherChinese
+        case WeatherWmo.freezingRainHeavyIntensity.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.freezingRainHeavyIntensity.weatherIconImage
+            cityWeatherName.text = WeatherWmo.freezingRainHeavyIntensity.weatherChinese
+        case WeatherWmo.snowFallSlight.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.snowFallSlight.weatherIconImage
+            cityWeatherName.text = WeatherWmo.snowFallSlight.weatherChinese
+        case WeatherWmo.snowFallModerate.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.snowFallModerate.weatherIconImage
+            cityWeatherName.text = WeatherWmo.snowFallModerate.weatherChinese
+        case WeatherWmo.snowFallHeavyIntensity.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.snowFallHeavyIntensity.weatherIconImage
+            cityWeatherName.text = WeatherWmo.snowFallHeavyIntensity.weatherChinese
+        case WeatherWmo.snowGrains.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.snowGrains.weatherIconImage
+            cityWeatherName.text = WeatherWmo.snowGrains.weatherChinese
+        case WeatherWmo.rainShowersSlight.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.rainShowersSlight.weatherIconImage
+            cityWeatherName.text = WeatherWmo.rainShowersSlight.weatherChinese
+        case WeatherWmo.rainShowersModerate.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.rainShowersModerate.weatherIconImage
+            cityWeatherName.text = WeatherWmo.rainShowersModerate.weatherChinese
+        case WeatherWmo.rainShowersViolent.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.rainShowersViolent.weatherIconImage
+            cityWeatherName.text = WeatherWmo.rainShowersViolent.weatherChinese
+        case WeatherWmo.snowShowersSlight.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.snowShowersSlight.weatherIconImage
+            cityWeatherName.text = WeatherWmo.snowShowersSlight.weatherChinese
+        case WeatherWmo.snowShowersHeavy.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.snowShowersHeavy.weatherIconImage
+            cityWeatherName.text = WeatherWmo.snowShowersHeavy.weatherChinese
+        case WeatherWmo.thunderstormSlight.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.thunderstormSlight.weatherIconImage
+            cityWeatherName.text = WeatherWmo.thunderstormSlight.weatherChinese
+        case WeatherWmo.thunderstormModerate.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.thunderstormModerate.weatherIconImage
+            cityWeatherName.text = WeatherWmo.thunderstormModerate.weatherChinese
+        case WeatherWmo.thunderstormWithSlight.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.thunderstormWithSlight.weatherIconImage
+            cityWeatherName.text = WeatherWmo.thunderstormWithSlight.weatherChinese
+        case WeatherWmo.thunderstormWithHeavyHail.weatherCodeWMO:
+            cityWeatherIcon.image = WeatherWmo.thunderstormWithHeavyHail.weatherIconImage
+            cityWeatherName.text = WeatherWmo.thunderstormWithHeavyHail.weatherChinese
+        default:
+            cityWeatherIcon.image = WeatherWmo.noSingle.weatherIconImage
+            cityWeatherName.text = WeatherWmo.noSingle.weatherChinese
+        }
+    }
+    
     // MARK: - Selectors
     // MARK: - UI Setup
     private func configureUI() {

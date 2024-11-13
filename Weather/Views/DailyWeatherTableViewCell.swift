@@ -43,7 +43,7 @@ class DailyWeatherTableViewCell: UITableViewCell {
         let progressView = UIProgressView(progressViewStyle: .bar)
         progressView.translatesAutoresizingMaskIntoConstraints = false
         progressView.progress = 0.25
-        progressView.trackTintColor = .black
+        progressView.trackTintColor = .systemBackground
         progressView.progressTintColor = .systemBlue
         return progressView
     }()
